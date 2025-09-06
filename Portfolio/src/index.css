@@ -1,0 +1,110 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
+All colors MUST be HSL.
+*/
+
+@layer base {
+  :root {
+    /* Futuristic Dark Theme - Primary Colors */
+    --background: 216 30% 3%;
+    --foreground: 210 100% 98%;
+
+    --card: 216 25% 5%;
+    --card-foreground: 210 100% 98%;
+
+    --popover: 216 25% 5%;
+    --popover-foreground: 210 100% 98%;
+
+    /* Cyber Blue Primary */
+    --primary: 220 100% 65%;
+    --primary-foreground: 216 30% 3%;
+    --primary-glow: 220 100% 75%;
+
+    /* Dark Purple Secondary */
+    --secondary: 270 60% 20%;
+    --secondary-foreground: 210 100% 98%;
+
+    --muted: 216 20% 10%;
+    --muted-foreground: 215 15% 65%;
+
+    /* Electric Purple Accent */
+    --accent: 280 100% 70%;
+    --accent-foreground: 216 30% 3%;
+
+    --destructive: 0 80% 65%;
+    --destructive-foreground: 210 100% 98%;
+
+    --border: 216 20% 15%;
+    --input: 216 20% 12%;
+    --ring: 220 100% 65%;
+
+    --radius: 0.75rem;
+
+    /* Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(220 100% 65%), hsl(280 100% 70%));
+    --gradient-dark: linear-gradient(135deg, hsl(216 30% 3%), hsl(216 25% 5%));
+    --gradient-glow: linear-gradient(135deg, hsl(220 100% 65% / 0.1), hsl(280 100% 70% / 0.1));
+
+    /* Glassmorphism */
+    --glass-bg: hsl(216 25% 8% / 0.8);
+    --glass-border: hsl(220 100% 65% / 0.2);
+
+    /* Shadows & Effects */
+    --shadow-cyber: 0 0 30px hsl(220 100% 65% / 0.3);
+    --shadow-purple: 0 0 30px hsl(280 100% 70% / 0.3);
+    --shadow-dark: 0 10px 40px hsl(216 30% 3% / 0.5);
+
+    --sidebar-background: 216 25% 5%;
+    --sidebar-foreground: 210 100% 98%;
+    --sidebar-primary: 220 100% 65%;
+    --sidebar-primary-foreground: 216 30% 3%;
+    --sidebar-accent: 216 20% 10%;
+    --sidebar-accent-foreground: 210 100% 98%;
+    --sidebar-border: 216 20% 15%;
+    --sidebar-ring: 220 100% 65%;
+  }
+
+  .dark {
+    /* Already optimized for dark mode above */
+    --background: 216 30% 3%;
+    --foreground: 210 100% 98%;
+    --card: 216 25% 5%;
+    --card-foreground: 210 100% 98%;
+    --popover: 216 25% 5%;
+    --popover-foreground: 210 100% 98%;
+    --primary: 220 100% 65%;
+    --primary-foreground: 216 30% 3%;
+    --secondary: 270 60% 20%;
+    --secondary-foreground: 210 100% 98%;
+    --muted: 216 20% 10%;
+    --muted-foreground: 215 15% 65%;
+    --accent: 280 100% 70%;
+    --accent-foreground: 216 30% 3%;
+    --destructive: 0 80% 65%;
+    --destructive-foreground: 210 100% 98%;
+    --border: 216 20% 15%;
+    --input: 216 20% 12%;
+    --ring: 220 100% 65%;
+    --sidebar-background: 216 25% 5%;
+    --sidebar-foreground: 210 100% 98%;
+    --sidebar-primary: 220 100% 65%;
+    --sidebar-primary-foreground: 216 30% 3%;
+    --sidebar-accent: 216 20% 10%;
+    --sidebar-accent-foreground: 210 100% 98%;
+    --sidebar-border: 216 20% 15%;
+    --sidebar-ring: 220 100% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+  }
+}
