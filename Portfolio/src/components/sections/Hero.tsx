@@ -3,6 +3,7 @@ import { Download, ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState } from 'react';
 import ImageUpload from '@/components/ImageUpload';
+import heroImage from '@/assets/jayasurya.jpg';
 
 const socialLinks = [{
   icon: Github,
@@ -19,7 +20,7 @@ const socialLinks = [{
 }];
 
 export default function Hero() {
-  const [profileImage, setProfileImage] = useState('/portfolio-uploads/43a2fc1e-0413-446a-8d0d-a673f73ac446.png');
+  const [profileImage, setProfileImage] = useState(heroImage);
 
   return <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Gradient Overlay */}
