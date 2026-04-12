@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import { Download, ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { useState, useEffect } from 'react';
+import { useAuth } from '@/context/AuthContext';
 import ImageUpload from '@/components/ImageUpload';
 import heroImage from '@/assets/jayasurya.jpg';
 
@@ -21,6 +22,7 @@ const socialLinks = [{
 
 export default function Hero() {
   const [profileImage, setProfileImage] = useState(heroImage);
+  const { isAdmin } = useAuth();
 
   useEffect(() => {
     // Load saved image from localStorage on mount
@@ -186,13 +188,21 @@ export default function Hero() {
           }}>
               {/* Glow Effect */}
               <div className="absolute inset-0 bg-gradient-primary opacity-20 blur-3xl rounded-full" />
-              
-              {/* Profile Picture */}
-              <ImageUpload
-                currentImage={profileImage}
-                onImageChange={handleImageChange}
-                className="relative z-10"
-              />
+              for logged-in admin */}
+              {isAdmincture - Only editable in Development */}
+              {isDevelopment ? (
+                <ImageUpload
+                  currentImage={profileImage}
+                  onImageChange={handleImageChange}
+                  className="relative z-10"
+                />
+              ) : (
+                <img
+                  src={profileImage}
+                  alt="Jayasurya K"
+                  className="relative z-10 w-40 h-40 lg:w-56 lg:h-56 rounded-full border-2 border-primary/50 object-cover shadow-lg"
+                />
+              )}
 
               {/* Floating Elements */}
               <motion.div className="absolute -top-4 -right-4 w-12 h-12 bg-gradient-primary rounded-full opacity-80" animate={{

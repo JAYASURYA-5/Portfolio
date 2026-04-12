@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Menu, X } from 'lucide-react';
+import AdminButton from './AdminButton';
 
 const navItems = [
   { href: '#home', label: 'Home' },
@@ -45,7 +46,7 @@ export default function Navbar() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex space-x-8">
+          <div className="hidden md:flex items-center space-x-8">
             {navItems.map((item) => (
               <motion.a
                 key={item.href}
@@ -62,17 +63,24 @@ export default function Navbar() {
                 />
               </motion.a>
             ))}
+            
+            {/* Admin Button */}
+            <AdminButton />
           </div>
 
-          {/* Mobile Menu Button */}
-          <motion.button
-            className="md:hidden text-foreground"
-            onClick={() => setIsOpen(!isOpen)}
-            whileTap={{ scale: 0.95 }}
-          >
-            {isOpen ? <X size={24} /> : <Menu size={24} />}
-          </motion.button>
-        </div>
+          {/* Mobile Menu Button and Admin Button */}
+          <div className="flex items-center gap-3">
+            <div className="md:hidden">
+              <AdminButton />
+            </div>
+            <motion.button
+              className="text-foreground"
+              onClick={() => setIsOpen(!isOpen)}
+              whileTap={{ scale: 0.95 }}
+            >
+              {isOpen ? <X size={24} /> : <Menu size={24} />}
+            </motion.button>
+          </div>
 
         {/* Mobile Navigation */}
         <motion.div

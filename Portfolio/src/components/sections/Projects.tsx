@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
+import { useAuth } from '@/context/AuthContext';
 import ProjectModal, { ProjectFormData } from '@/components/ProjectModal';
 
 interface Project extends ProjectFormData {
@@ -50,6 +51,7 @@ export default function Projects() {
   const [isSaving, setIsSaving] = useState(false);
 
   const { toast } = useToast();
+  const { isAdmin } = useAuth();
 
   // Load projects from localStorage on mount
   useEffect(() => {
@@ -218,17 +220,19 @@ export default function Projects() {
             ))}
           </div>
 
-          {/* Add Project Button */}
-          <div className="flex justify-center">
-            <Button
-              onClick={openAddModal}
-              className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
-              size="lg"
-            >
-              <Plus className="mr-2 h-5 w-5" />
-              Add New Project
-            </Button>
-          </div>
+          {/* Add Project Button - Only for logged-in admin */}
+          {isAdmin && (
+            <div className="flex justify-center">
+              <Button
+                onClick={openAddModal}
+                className="bg-gradient-primary hover:shadow-glow transition-all duration-300"
+                size="lg"
+              >
+                <Plus className="mr-2 h-5 w-5" />
+                Add New Project
+              </Button>
+            </div>
+          )}
         </motion.div>
 
         {/* Projects Grid */}
@@ -295,50 +299,54 @@ export default function Projects() {
                       </ul>
                     </div>
 
-                    {/* Action Buttons */}
-                    <div className="flex flex-wrap gap-3 pt-4 border-t border-border/30 relative z-20">
-                      {project.githubLink && (
+                    {/* Action Buttons - Only for logged-in admin */}
+                    {isAdmin && (
+                      <div className="flex flex-wrap gap-3 pt-4 border-t border-border/30 relative z-20">
+                        {project.githubLink && (
+                          <Button
+                            type="button"
+                            size="sm"
+                            className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50 hover:border-primary transition-all cursor-pointer"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              window.open(project.githubLink, '_blank');
+                            }}
+                          >
+                            <Github className="mr-2 h-4 w-4" />
+                            GitHub
+                          </Button>
+                        )}
+
                         <Button
                           type="button"
                           size="sm"
-                          className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50 hover:border-primary transition-all cursor-pointer"
+                          className="bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/50 hover:border-green-500 transition-all cursor-pointer"
                           onClick={(e) => {
                             e.preventDefault();
                             e.stopPropagation();
-                            window.open(project.githubLink, '_blank');
+                            openEditModal(project);
                           }}
                         >
-                          <Github className="mr-2 h-4 w-4" />
-                          GitHub
+                          <Edit2 className="mr-2 h-4 w-4" />
+                          Edit
                         </Button>
-                      )}
 
-                      <Button
-                        type="button"
-                        size="sm"
-                        className="bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/50 hover:border-green-500 transition-all cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          openEditModal(project);
-                        }}
-                      >
-                        <Edit2 className="mr-2 h-4 w-4" />
-                        Edit
-                      </Button>
-
-                      <Button
-                        type="button"
-                        size="sm"
-                        className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all cursor-pointer"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          e.stopPropagation();
-                          handleDeleteProject(project.id);
-                        }}
-                      >
-                        <Trash2 className="mr-2 h-4 w-4" />
-                        Delete
+                        <Button
+                          type="button"
+                          size="sm"
+                          className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all cursor-pointer"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            handleDeleteProject(project.id);
+                          }}
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete
+                        </Button>
+                      </div>
+                    )}lete
                       </Button>
                     </div>
                   </CardContent>
