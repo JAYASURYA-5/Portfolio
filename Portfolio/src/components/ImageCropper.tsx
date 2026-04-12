@@ -71,9 +71,14 @@ export default function ImageCropper({ image, open, onClose, onCropComplete }: I
         return new Promise((resolve) => {
             canvas.toBlob((file) => {
                 if (file) {
-                    resolve(URL.createObjectURL(file));
+                    // Convert blob to Data URL so it persists after page reload
+                    const reader = new FileReader();
+                    reader.onloadend = () => {
+                        resolve(reader.result as string);
+                    };
+                    reader.readAsDataURL(file);
                 }
-            }, 'image/jpeg');
+            }, 'image/jpeg', 0.95);
         });
     };
 

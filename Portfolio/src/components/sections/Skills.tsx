@@ -1,5 +1,5 @@
 import { motion } from 'framer-motion';
-import { Code, Database, BarChart3, FileSpreadsheet, Brain, TrendingUp } from 'lucide-react';
+import { Code, Database, BarChart3, FileSpreadsheet, Brain, TrendingUp, Layers } from 'lucide-react';
 
 const skills = [
   {
@@ -37,6 +37,12 @@ const skills = [
     level: 90,
     icon: Brain,
     description: "Machine learning, predictive modeling, data visualization"
+  },
+  {
+    name: "Full Stack Development",
+    level: 90,
+    icon: Layers,
+    description: "Frontend & backend development, web applications, REST APIs"
   }
 ];
 

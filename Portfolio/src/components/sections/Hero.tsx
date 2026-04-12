@@ -1,7 +1,7 @@
 import { motion } from 'framer-motion';
 import { Download, ChevronDown, Github, Linkedin, Mail } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import ImageUpload from '@/components/ImageUpload';
 import heroImage from '@/assets/jayasurya.jpg';
 
@@ -21,6 +21,20 @@ const socialLinks = [{
 
 export default function Hero() {
   const [profileImage, setProfileImage] = useState(heroImage);
+
+  useEffect(() => {
+    // Load saved image from localStorage on mount
+    const savedImage = localStorage.getItem('profileImage');
+    if (savedImage) {
+      setProfileImage(savedImage);
+    }
+  }, []);
+
+  const handleImageChange = (imageUrl: string) => {
+    setProfileImage(imageUrl);
+    // Save to localStorage so it persists after refresh
+    localStorage.setItem('profileImage', imageUrl);
+  };
 
   return <section id="home" className="min-h-screen flex items-center justify-center relative overflow-hidden">
       {/* Gradient Overlay */}
@@ -176,7 +190,7 @@ export default function Hero() {
               {/* Profile Picture */}
               <ImageUpload
                 currentImage={profileImage}
-                onImageChange={setProfileImage}
+                onImageChange={handleImageChange}
                 className="relative z-10"
               />
 
