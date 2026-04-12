@@ -346,9 +346,8 @@ export default function Projects() {
                           Delete
                         </Button>
                       </div>
-                    )}lete
-                      </Button>
-                    </div>
+                    )}
+                  </CardContent>
                   </CardContent>
 
                   {/* Hover Effect */}
