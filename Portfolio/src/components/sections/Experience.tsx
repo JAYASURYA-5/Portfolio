@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Briefcase, MapPin, Calendar, Plus, Edit2, Trash2, X } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -84,6 +85,7 @@ const defaultExperiences: Experience[] = [
 ];
 
 export default function Experience() {
+  const { isAuthenticated } = useAuth();
   const [experiences, setExperiences] = useState<Experience[]>(() => {
     try {
       const saved = localStorage.getItem('experiences');
@@ -211,15 +213,17 @@ export default function Experience() {
         </motion.div>
 
         {/* Add Experience Button */}
-        <div className="flex justify-end mb-8">
-          <Button
-            onClick={openAddDialog}
-            className="bg-gradient-primary hover:opacity-90 text-white gap-2"
-          >
-            <Plus size={20} />
-            Add Experience
-          </Button>
-        </div>
+        {isAuthenticated && (
+          <div className="flex justify-end mb-8">
+            <Button
+              onClick={openAddDialog}
+              className="bg-gradient-primary hover:opacity-90 text-white gap-2"
+            >
+              <Plus size={20} />
+              Add Experience
+            </Button>
+          </div>
+        )}
 
         {/* Experience Cards */}
         <div className="grid gap-6">
@@ -253,26 +257,28 @@ export default function Experience() {
                         </p>
                       </div>
                     </div>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => openEditDialog(exp)}
-                        className="gap-2"
-                      >
-                        <Edit2 size={16} />
-                        Edit
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="sm"
-                        onClick={() => handleDelete(exp.id)}
-                        className="text-destructive hover:text-destructive gap-2"
-                      >
-                        <Trash2 size={16} />
-                        Delete
-                      </Button>
-                    </div>
+                    {isAuthenticated && (
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => openEditDialog(exp)}
+                          className="gap-2"
+                        >
+                          <Edit2 size={16} />
+                          Edit
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="sm"
+                          onClick={() => handleDelete(exp.id)}
+                          className="text-destructive hover:text-destructive gap-2"
+                        >
+                          <Trash2 size={16} />
+                          Delete
+                        </Button>
+                      </div>
+                    )}
                   </div>
                 </CardHeader>
                 <CardContent>

@@ -1,10 +1,10 @@
 import { motion } from 'framer-motion';
-import { Github, Plus, Edit2, Trash2 } from 'lucide-react';
+import { Github, Plus, Edit2, Trash2, ExternalLink } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { useAuth } from '@/context/AuthContext';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { useState, useEffect } from 'react';
 import { useToast } from '@/components/ui/use-toast';
-import { useAuth } from '@/context/AuthContext';
 import ProjectModal, { ProjectFormData } from '@/components/ProjectModal';
 
 interface Project extends ProjectFormData {
@@ -19,7 +19,8 @@ const defaultProjects: Project[] = [
     technologies: "Python, OpenCV, Pandas, OCR, Excel",
     features: "Automated table detection in images\nOCR text extraction and processing\nData validation and cleaning\nExcel export with formatting",
     type: "Python",
-    githubLink: "https://github.com"
+    githubLink: "https://github.com",
+    livePageUrl: ""
   },
   {
     id: '2',
@@ -28,7 +29,8 @@ const defaultProjects: Project[] = [
     technologies: "Python, Scikit-learn, Pandas, ML, Statistics",
     features: "Multiple ML algorithms comparison\nFeature engineering and selection\nModel evaluation and validation\nRisk assessment metrics",
     type: "Data Science",
-    githubLink: "https://github.com"
+    githubLink: "https://github.com",
+    livePageUrl: ""
   },
   {
     id: '3',
@@ -37,13 +39,15 @@ const defaultProjects: Project[] = [
     technologies: "Python, Power BI, DAX, Statistics, Visualization",
     features: "Weather impact analysis\nTraffic pattern correlation\nInteractive Power BI dashboard\nDelivery optimization insights",
     type: "Data Analyst",
-    githubLink: "https://github.com"
+    githubLink: "https://github.com",
+    livePageUrl: ""
   }
 ];
 
 const projectTypes = ['Full Stack', 'Data Science', 'Data Analyst', 'Python'] as const;
 
 export default function Projects() {
+  const { isAuthenticated } = useAuth();
   const [projects, setProjects] = useState<Project[]>(defaultProjects);
   const [selectedType, setSelectedType] = useState<string | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -51,7 +55,6 @@ export default function Projects() {
   const [isSaving, setIsSaving] = useState(false);
 
   const { toast } = useToast();
-  const { isAdmin } = useAuth();
 
   // Load projects from localStorage on mount
   useEffect(() => {
@@ -220,8 +223,8 @@ export default function Projects() {
             ))}
           </div>
 
-          {/* Add Project Button - Only for logged-in admin */}
-          {isAdmin && (
+          {/* Add Project Button */}
+          {isAuthenticated && (
             <div className="flex justify-center">
               <Button
                 onClick={openAddModal}
@@ -246,7 +249,7 @@ export default function Projects() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.2 }}
               >
-                <Card className="bg-card/50 backdrop-blur-sm border border-border/50 shadow-dark hover:shadow-cyber transition-all duration-300 group overflow-hidden relative">
+                <Card className="bg-card/50 backdrop-blur-sm border border-border/50 shadow-dark hover:shadow-cyber transition-all duration-300 group overflow-hidden">
                   <CardHeader>
                     <div className="flex items-start justify-between">
                       <div className="flex-1">
@@ -260,6 +263,40 @@ export default function Projects() {
                         </div>
                         <p className="text-muted-foreground">{project.description}</p>
                       </div>
+                      {project.livePageUrl && (
+                        <motion.button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.livePageUrl, '_blank');
+                          }}
+                          whileHover={{ scale: 1.15 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="ml-4 p-3 rounded-lg bg-green-500/10 hover:bg-green-500/20 transition-all duration-300 flex-shrink-0 text-foreground/60 hover:text-green-600 pointer-events-auto z-20 relative"
+                          title="View Live Page"
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <ExternalLink size={24} />
+                        </motion.button>
+                      )}
+                      {project.githubLink && (
+                        <motion.button
+                          type="button"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.githubLink, '_blank');
+                          }}
+                          whileHover={{ scale: 1.15 }}
+                          whileTap={{ scale: 0.95 }}
+                          className="ml-4 p-3 rounded-lg bg-secondary/50 hover:bg-primary/20 transition-all duration-300 flex-shrink-0 text-foreground/60 hover:text-primary pointer-events-auto z-20 relative"
+                          title="View on GitHub"
+                          style={{ cursor: 'pointer' }}
+                        >
+                          <Github size={24} className="group-hover:animate-pulse" />
+                        </motion.button>
+                      )}
                     </div>
                   </CardHeader>
 
@@ -299,60 +336,80 @@ export default function Projects() {
                       </ul>
                     </div>
 
-                    {/* Action Buttons - Only for logged-in admin */}
-                    {isAdmin && (
-                      <div className="flex flex-wrap gap-3 pt-4 border-t border-border/30 relative z-20">
-                        {project.githubLink && (
+                    {/* Action Buttons */}
+                    <div className="flex flex-wrap gap-3 pt-4 border-t border-border/30 relative z-20">
+                      {project.livePageUrl && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="group hover:border-green-500/50 hover:bg-green-500/10 pointer-events-auto"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.livePageUrl, '_blank');
+                          }}
+                        >
+                          <ExternalLink className="mr-2 h-4 w-4 group-hover:text-green-600" />
+                          Live Page
+                        </Button>
+                      )}
+                      {project.githubLink && (
+                        <Button
+                          type="button"
+                          variant="outline"
+                          size="sm"
+                          className="group hover:border-primary/50 hover:bg-primary/10 pointer-events-auto"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            window.open(project.githubLink, '_blank');
+                          }}
+                        >
+                          <Github className="mr-2 h-4 w-4 group-hover:text-primary" />
+                          GitHub
+                        </Button>
+                      )}
+
+                      {isAuthenticated && (
+                        <>
                           <Button
                             type="button"
+                            variant="outline"
                             size="sm"
-                            className="bg-primary/20 text-primary hover:bg-primary/30 border border-primary/50 hover:border-primary transition-all cursor-pointer"
+                            className="group hover:border-primary/50 hover:bg-primary/10 pointer-events-auto"
                             onClick={(e) => {
                               e.preventDefault();
                               e.stopPropagation();
-                              window.open(project.githubLink, '_blank');
+                              openEditModal(project);
                             }}
                           >
-                            <Github className="mr-2 h-4 w-4" />
-                            GitHub
+                            <Edit2 className="mr-2 h-4 w-4 group-hover:text-primary" />
+                            Edit
                           </Button>
-                        )}
 
-                        <Button
-                          type="button"
-                          size="sm"
-                          className="bg-green-500/20 text-green-400 hover:bg-green-500/30 border border-green-500/50 hover:border-green-500 transition-all cursor-pointer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            openEditModal(project);
-                          }}
-                        >
-                          <Edit2 className="mr-2 h-4 w-4" />
-                          Edit
-                        </Button>
-
-                        <Button
-                          type="button"
-                          size="sm"
-                          className="bg-red-500/20 text-red-400 hover:bg-red-500/30 border border-red-500/50 hover:border-red-500 transition-all cursor-pointer"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            e.stopPropagation();
-                            handleDeleteProject(project.id);
-                          }}
-                        >
-                          <Trash2 className="mr-2 h-4 w-4" />
-                          Delete
-                        </Button>
-                      </div>
-                    )}
-                  </CardContent>
+                          <Button
+                            type="button"
+                            variant="outline"
+                            size="sm"
+                            className="group hover:border-red-500/50 hover:bg-red-500/10 pointer-events-auto"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                              handleDeleteProject(project.id);
+                            }}
+                          >
+                            <Trash2 className="mr-2 h-4 w-4 group-hover:text-red-500" />
+                            Delete
+                          </Button>
+                        </>
+                      )}
+                    </div>
                   </CardContent>
 
                   {/* Hover Effect */}
                   <motion.div
-                    className="absolute inset-0 bg-gradient-glow opacity-0 group-hover:opacity-5 transition-opacity duration-300 pointer-events-none"
+                    className="absolute inset-0 bg-gradient-glow opacity-0 group-hover:opacity-5 transition-opacity duration-300"
                     initial={false}
                   />
                 </Card>

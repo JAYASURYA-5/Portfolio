@@ -3,6 +3,7 @@ import React, { useState, useRef } from 'react';
 import { Camera, Upload } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import ImageCropper from './ImageCropper';
+import { useAuth } from '@/context/AuthContext';
 
 interface ImageUploadProps {
   currentImage: string;
@@ -14,9 +15,10 @@ export default function ImageUpload({ currentImage, onImageChange, className = "
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [isUploading, setIsUploading] = useState(false);
   const [selectedFile, setSelectedFile] = useState<string | null>(null);
+  const { isAuthenticated } = useAuth();
 
-  // Only show upload functionality in development mode
-  const isDevelopment = import.meta.env.DEV;
+  // Only show upload functionality when authenticated as admin
+  const canUpload = isAuthenticated;
 
   const handleFileSelect = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -47,8 +49,8 @@ export default function ImageUpload({ currentImage, onImageChange, className = "
           }}
         />
 
-        {/* Upload overlay - only show in development */}
-        {isDevelopment && (
+        {/* Upload overlay - only show when authenticated */}
+        {canUpload && (
           <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center">
             <Button
               onClick={handleUploadClick}
@@ -67,8 +69,8 @@ export default function ImageUpload({ currentImage, onImageChange, className = "
         )}
       </div>
 
-      {/* File input - only render in development */}
-      {isDevelopment && (
+      {/* File input - only render when authenticated */}
+      {canUpload && (
         <input
           ref={fileInputRef}
           type="file"

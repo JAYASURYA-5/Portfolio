@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Menu, X } from 'lucide-react';
-import AdminButton from './AdminButton';
+import { Menu, X, LogIn, LogOut } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 
 const navItems = [
   { href: '#home', label: 'Home' },
@@ -17,6 +18,8 @@ const navItems = [
 export default function Navbar() {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -25,6 +28,11 @@ export default function Navbar() {
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
+  const handleLogout = () => {
+    logout();
+    navigate('/');
+  };
 
   return (
     <motion.nav
@@ -46,7 +54,7 @@ export default function Navbar() {
           </motion.div>
 
           {/* Desktop Navigation */}
-          <div className="hidden md:flex items-center space-x-8">
+          <div className="hidden md:flex space-x-8 items-center">
             {navItems.map((item) => (
               <motion.a
                 key={item.href}
@@ -63,24 +71,39 @@ export default function Navbar() {
                 />
               </motion.a>
             ))}
-            
-            {/* Admin Button */}
-            <AdminButton />
+            {isAuthenticated ? (
+              <motion.button
+                onClick={handleLogout}
+                className="flex items-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <LogOut size={18} />
+                <span>Logout</span>
+              </motion.button>
+            ) : (
+              <Link to="/login">
+                <motion.button
+                  className="flex items-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <LogIn size={18} />
+                  <span>Admin</span>
+                </motion.button>
+              </Link>
+            )}
           </div>
 
-          {/* Mobile Menu Button and Admin Button */}
-          <div className="flex items-center gap-3">
-            <div className="md:hidden">
-              <AdminButton />
-            </div>
-            <motion.button
-              className="text-foreground"
-              onClick={() => setIsOpen(!isOpen)}
-              whileTap={{ scale: 0.95 }}
-            >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
-            </motion.button>
-          </div>
+          {/* Mobile Menu Button */}
+          <motion.button
+            className="md:hidden text-foreground"
+            onClick={() => setIsOpen(!isOpen)}
+            whileTap={{ scale: 0.95 }}
+          >
+            {isOpen ? <X size={24} /> : <Menu size={24} />}
+          </motion.button>
+        </div>
 
         {/* Mobile Navigation */}
         <motion.div
@@ -100,6 +123,31 @@ export default function Navbar() {
                 {item.label}
               </motion.a>
             ))}
+            {isAuthenticated ? (
+              <motion.button
+                onClick={() => {
+                  handleLogout();
+                  setIsOpen(false);
+                }}
+                className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-destructive text-destructive-foreground rounded-lg hover:bg-destructive/90 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <LogOut size={18} />
+                <span>Logout</span>
+              </motion.button>
+            ) : (
+              <Link to="/login" onClick={() => setIsOpen(false)}>
+                <motion.button
+                  className="w-full flex items-center justify-center gap-2 px-4 py-2 bg-primary text-primary-foreground rounded-lg hover:bg-primary/90 transition-colors"
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <LogIn size={18} />
+                  <span>Admin Login</span>
+                </motion.button>
+              </Link>
+            )}
           </div>
         </motion.div>
       </div>

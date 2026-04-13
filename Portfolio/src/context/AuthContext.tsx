@@ -1,7 +1,7 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface AuthContextType {
-  isAdmin: boolean;
+  isAuthenticated: boolean;
   login: (username: string, password: string) => boolean;
   logout: () => void;
 }
@@ -11,42 +11,42 @@ const AuthContext = createContext<AuthContextType | undefined>(undefined);
 const ADMIN_USERNAME = '6374993050';
 const ADMIN_PASSWORD = 'Surya@11';
 
-export function AuthProvider({ children }: { children: ReactNode }) {
-  const [isAdmin, setIsAdmin] = useState(false);
+export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
-  // Check if user is already logged in (from localStorage)
+  // Check if user is already logged in from localStorage
   useEffect(() => {
-    const savedAdmin = localStorage.getItem('isAdminLoggedIn');
-    if (savedAdmin === 'true') {
-      setIsAdmin(true);
+    const storedAuth = localStorage.getItem('isAuthenticated');
+    if (storedAuth === 'true') {
+      setIsAuthenticated(true);
     }
   }, []);
 
   const login = (username: string, password: string): boolean => {
     if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-      setIsAdmin(true);
-      localStorage.setItem('isAdminLoggedIn', 'true');
+      setIsAuthenticated(true);
+      localStorage.setItem('isAuthenticated', 'true');
       return true;
     }
     return false;
   };
 
   const logout = () => {
-    setIsAdmin(false);
-    localStorage.removeItem('isAdminLoggedIn');
+    setIsAuthenticated(false);
+    localStorage.removeItem('isAuthenticated');
   };
 
   return (
-    <AuthContext.Provider value={{ isAdmin, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
       {children}
     </AuthContext.Provider>
   );
-}
+};
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within AuthProvider');
+    throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
-}
+};

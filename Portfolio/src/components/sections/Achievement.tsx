@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Trophy, MapPin, Calendar, Plus, Edit2, Trash2, X, Award, BookOpen, Heart } from 'lucide-react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { useAuth } from '@/context/AuthContext';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
@@ -105,6 +106,7 @@ const categoryConfig = {
 };
 
 export default function Achievement() {
+  const { isAuthenticated } = useAuth();
   const [achievements, setAchievements] = useState<Achievement[]>(() => {
     try {
       const saved = localStorage.getItem('achievements');
@@ -253,15 +255,17 @@ export default function Achievement() {
         </motion.div>
 
         {/* Add Achievement Button */}
-        <div className="flex justify-end mb-8">
-          <Button
-            onClick={openAddDialog}
-            className="bg-gradient-primary hover:opacity-90 text-white gap-2"
-          >
-            <Plus size={20} />
-            Add Achievement
-          </Button>
-        </div>
+        {isAuthenticated && (
+          <div className="flex justify-end mb-8">
+            <Button
+              onClick={openAddDialog}
+              className="bg-gradient-primary hover:opacity-90 text-white gap-2"
+            >
+              <Plus size={20} />
+              Add Achievement
+            </Button>
+          </div>
+        )}
 
         {/* Top Achievements Section */}
         {(() => {
@@ -304,20 +308,22 @@ export default function Achievement() {
                       <CardHeader className="pb-3">
                         <div className="flex items-start justify-between gap-2">
                           <div className="text-5xl opacity-90">{config.icon}</div>
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleFavorite(currentAchievement.id);
-                            }}
-                            className="p-2 hover:bg-red-500/20 rounded-lg"
-                          >
-                            <Heart
-                              size={20}
-                              className="text-red-500 fill-red-500"
-                            />
-                          </motion.button>
+                          {isAuthenticated && (
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(currentAchievement.id);
+                              }}
+                              className="p-2 hover:bg-red-500/20 rounded-lg"
+                            >
+                              <Heart
+                                size={20}
+                                className="text-red-500 fill-red-500"
+                              />
+                            </motion.button>
+                          )}
                         </div>
                         <CardTitle className="text-2xl mt-3">
                           {currentAchievement.title}
@@ -469,42 +475,44 @@ export default function Achievement() {
                     <CardHeader className="pb-3">
                       <div className="flex items-start justify-between gap-2">
                         <div className="text-3xl opacity-80">{config.icon}</div>
-                        <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              toggleFavorite(achievement.id);
-                            }}
-                            className="p-1.5 hover:bg-red-500/20 rounded-lg"
-                          >
-                            <Heart
-                              size={14}
-                              className={`${
-                                achievement.isFavorite
-                                  ? 'text-red-500 fill-red-500'
-                                  : 'text-muted-foreground'
-                              }`}
-                            />
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => openEditDialog(achievement)}
-                            className="p-1.5 hover:bg-primary/20 rounded-lg"
-                          >
-                            <Edit2 size={14} className="text-primary" />
-                          </motion.button>
-                          <motion.button
-                            whileHover={{ scale: 1.1 }}
-                            whileTap={{ scale: 0.95 }}
-                            onClick={() => handleDelete(achievement.id)}
-                            className="p-1.5 hover:bg-destructive/20 rounded-lg"
-                          >
-                            <Trash2 size={14} className="text-destructive" />
-                          </motion.button>
-                        </div>
+                        {isAuthenticated && (
+                          <div className="flex gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                toggleFavorite(achievement.id);
+                              }}
+                              className="p-1.5 hover:bg-red-500/20 rounded-lg"
+                            >
+                              <Heart
+                                size={14}
+                                className={`${
+                                  achievement.isFavorite
+                                    ? 'text-red-500 fill-red-500'
+                                    : 'text-muted-foreground'
+                                }`}
+                              />
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => openEditDialog(achievement)}
+                              className="p-1.5 hover:bg-primary/20 rounded-lg"
+                            >
+                              <Edit2 size={14} className="text-primary" />
+                            </motion.button>
+                            <motion.button
+                              whileHover={{ scale: 1.1 }}
+                              whileTap={{ scale: 0.95 }}
+                              onClick={() => handleDelete(achievement.id)}
+                              className="p-1.5 hover:bg-destructive/20 rounded-lg"
+                            >
+                              <Trash2 size={14} className="text-destructive" />
+                            </motion.button>
+                          </div>
+                        )}
                       </div>
                       <CardTitle className="text-lg mt-2">{achievement.title}</CardTitle>
                       <p className={`text-sm font-semibold mt-1 ${config.textColor}`}>

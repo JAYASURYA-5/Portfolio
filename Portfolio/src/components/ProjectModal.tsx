@@ -20,6 +20,7 @@ export interface ProjectFormData {
   technologies: string;
   features: string;
   githubLink: string;
+  livePageUrl?: string;
 }
 
 interface ProjectModalProps {
@@ -41,6 +42,7 @@ export default function ProjectModal({
   const [technologies, setTechnologies] = useState('');
   const [features, setFeatures] = useState('');
   const [githubLink, setGithubLink] = useState('');
+  const [livePageUrl, setLivePageUrl] = useState('');
 
   const isEditing = !!initialData?.id;
 
@@ -54,6 +56,7 @@ export default function ProjectModal({
         setTechnologies(initialData.technologies || '');
         setFeatures(initialData.features || '');
         setGithubLink(initialData.githubLink || '');
+        setLivePageUrl(initialData.livePageUrl || '');
       } else {
         setTitle('');
         setDescription('');
@@ -61,6 +64,7 @@ export default function ProjectModal({
         setTechnologies('');
         setFeatures('');
         setGithubLink('');
+        setLivePageUrl('');
       }
     }
   }, [isOpen, initialData]);
@@ -81,6 +85,7 @@ export default function ProjectModal({
       technologies: technologies.trim(),
       features: features.trim(),
       githubLink: githubLink.trim(),
+      livePageUrl: livePageUrl.trim() || undefined,
     };
 
     onSave(formData);
@@ -171,6 +176,19 @@ export default function ProjectModal({
               placeholder="https://github.com/username/repository"
               value={githubLink}
               onChange={(e) => setGithubLink(e.target.value)}
+              className="border-border/50"
+            />
+          </div>
+
+          {/* Live Page URL */}
+          <div className="space-y-2">
+            <Label htmlFor="livePageUrl">Live Page URL (Optional)</Label>
+            <Input
+              id="livePageUrl"
+              type="url"
+              placeholder="https://your-project-url.com"
+              value={livePageUrl}
+              onChange={(e) => setLivePageUrl(e.target.value)}
               className="border-border/50"
             />
           </div>

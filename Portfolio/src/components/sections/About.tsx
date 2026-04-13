@@ -1,7 +1,9 @@
 
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { GraduationCap, MapPin, Calendar } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
+
 const education = {
   degree: "B.Tech in Information Technology",
   institution: "Adithya Institute of Technology",
@@ -9,17 +11,55 @@ const education = {
   duration: "2023 - 2027",
   description: "Focused on data structures, algorithms, database management, and emerging technologies in IT."
 };
-const stats = [{
-  label: "Projects Completed",
-  value: "3+"
-}, {
-  label: "Technologies",
-  value: "6+"
-}, {
-  label: "Years of Learning",
-  value: "2+"
-}];
+
 export default function About() {
+  const [projectCount, setProjectCount] = useState(3);
+  const [technologiesCount, setTechnologiesCount] = useState(6);
+  const [yearsOfLearning, setYearsOfLearning] = useState(2);
+
+  useEffect(() => {
+    // Count projects
+    try {
+      const projectsData = localStorage.getItem('portfolioProjects');
+      if (projectsData) {
+        const projects = JSON.parse(projectsData);
+        setProjectCount(projects.length || 3);
+      }
+    } catch (error) {
+      console.error('Failed to load projects:', error);
+    }
+
+    // Count technologies/skills
+    try {
+      const skillsData = localStorage.getItem('skills');
+      if (skillsData) {
+        const skills = JSON.parse(skillsData);
+        setTechnologiesCount(skills.length || 6);
+      }
+    } catch (error) {
+      console.error('Failed to load skills:', error);
+    }
+
+    // Calculate years of learning from education start
+    const startYear = 2023;
+    const currentYear = new Date().getFullYear();
+    setYearsOfLearning(currentYear - startYear);
+  }, []);
+
+  const stats = [
+    {
+      label: "Projects Completed",
+      value: `${projectCount}+`
+    },
+    {
+      label: "Technologies",
+      value: `${technologiesCount}+`
+    },
+    {
+      label: "Years of Learning",
+      value: `${yearsOfLearning}+`
+    }
+  ];
   return <section id="about" className="py-20 relative">
       <div className="container mx-auto px-6">
         {/* Section Header */}
